@@ -41,6 +41,11 @@ List<Person> people = new()
                                                  FirstName = "Sally",
                                                  LastName = "Jones",
                                                  DateOfBirth = new(2000, 7, 12)
+                                                 },new(0M)
+                                                {
+                                                 FirstName = "Sally",
+                                                 LastName = "Jones",
+                                                 DateOfBirth = new(2000, 7, 12)
                                                  }
                                               }
    },
