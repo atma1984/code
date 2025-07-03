@@ -79,6 +79,7 @@ static void WorkWithDirectories()
 
 static void WorkWithFiles()
 {
+    //change file, want to show this string in red color with commang git status
     // определяем путь к каталогу для выходных файлов,
     // начиная с папки пользователя
     string dir = Combine(
