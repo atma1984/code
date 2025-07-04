@@ -9,7 +9,7 @@ WriteLine("[3] UTF-8");
 WriteLine("[4] UTF-16 (Unicode)");
 WriteLine("[5] UTF-32");
 WriteLine("[any other key] Default");
-
+//12345
 // выбираем кодировку
 Write("Press a number to choose an encoding: ");
 ConsoleKey number = ReadKey(intercept: false).Key;
