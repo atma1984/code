@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore; // DbContext, DbContextOptionsBuilder
 using static System.Console;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Packt.Shared;
 // позволяет управлять подключением к базе данных
 public class Northwind : DbContext
@@ -29,11 +30,7 @@ public class Northwind : DbContext
         //    //}
         //}
 
-        string connection = "Data Source=NKMS0310232\\MSSQLSERVER_CORE;" +
-                     "Initial Catalog=Northwind;" +
-                     "User ID=sa;" +
-                     "Password=VjzLjxf2020!;" +
-                     "MultipleActiveResultSets=true;";
+        string connection = "Data Source = NKMS0310232\\MSSQLSERVER_CORE; Initial Catalog = Northwind; User ID = sa; Password = VjzLjxf2020!; Encrypt = False;";
         optionsBuilder.UseSqlServer(connection);
     }
     protected override void OnModelCreating(
@@ -52,5 +49,9 @@ ModelBuilder modelBuilder)
         //    .Property(product => product.Cost)
         //    .HasConversion<double>();
         //}
+
+        // глобальный фильтр для удаления снятых с производства товаров
+        modelBuilder.Entity<Product>()
+        .HasQueryFilter(p => !p.Discontinued);
     }
 }
