@@ -6,32 +6,81 @@ using static System.Console;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore.ChangeTracking; // класс CollectionEntry
 
 
 
 WriteLine($"Using {ProjectConstants.DatabaseProvider} database provider.");
-//QueryingCategories();
+QueryingCategories();
 //FilteredIncludes();
 //QueryingProducts();
-QueryingWithLike();
+//QueryingWithLike();
 static void QueryingCategories()
 {
     using (Northwind db = new())
     {
-        ILoggerFactory loggerFactory = db.GetService<ILoggerFactory>();
-        loggerFactory.AddProvider(new ConsoleLoggerProvider());
-        WriteLine("Categories and how many products they have:");
-        // запрос на получение всех категорий и связанных с ними продуктов
-        IQueryable<Category>? categories = db.Categories?.Include(c => c.Products);
-       
-        if (categories is null)
+        #region
+
+        //ILoggerFactory loggerFactory = db.GetService<ILoggerFactory>();
+        //loggerFactory.AddProvider(new ConsoleLoggerProvider());
+        // WriteLine("Categories and how many products they have:");
+        // // запрос на получение всех категорий и связанных с ними продуктов
+        //// IQueryable<Category>? categories = db.Categories;//?.Include(c => c.Products);
+        // IQueryable<Category>? categories = db.Categories;
+
+        // if (categories is null)
+        // {
+        //     WriteLine("No categories found.");
+        //     return;
+        // }
+        // // выполнение запроса и перечисление результатов
+        // foreach (Category c in categories)
+        // {
+        //     WriteLine($"{c.CategoryName} has {c.Products.Count} products.");
+        // }
+
+        #endregion
+
+        IQueryable<Category>? categories;
+        // = db.Categories;
+        // .Include(c => c.Products);
+        db.ChangeTracker.LazyLoadingEnabled = false;
+        Write("Enable eager loading? (Y/N): ");
+        bool eagerloading = (ReadKey().Key == ConsoleKey.Y);
+        bool explicitloading = false;
+        WriteLine();
+        if (eagerloading)
+        {
+            categories = db.Categories?.Include(c => c.Products);
+        }
+        else
+        {
+            categories = db.Categories;
+            Write("Enable explicit loading? (Y/N): ");
+            explicitloading = (ReadKey().Key == ConsoleKey.Y);
+            WriteLine();
+        }
+
+        if ((categories is null) || (!categories.Any()))
         {
             WriteLine("No categories found.");
             return;
         }
-        // выполнение запроса и перечисление результатов
+
         foreach (Category c in categories)
         {
+            if (explicitloading)
+            {
+                Write($"Explicitly load products for {c.CategoryName}? (Y/N): ");
+                ConsoleKeyInfo key = ReadKey();
+                WriteLine();
+                if (key.Key == ConsoleKey.Y)
+                {
+                    CollectionEntry<Category, Product> products =
+                    db.Entry(c).Collection(c2 => c2.Products);
+                    if (!products.IsLoaded) products.Load();
+                }
+            }
             WriteLine($"{c.CategoryName} has {c.Products.Count} products.");
         }
     }
