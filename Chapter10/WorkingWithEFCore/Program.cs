@@ -1,17 +1,29 @@
 ﻿
 using Microsoft.EntityFrameworkCore; // метод расширения Include
-using Packt.Shared;
-using static System.Console;
-
+using Microsoft.EntityFrameworkCore.ChangeTracking; // класс CollectionEntry
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore.ChangeTracking; // класс CollectionEntry
+using Packt.Shared;
+using static System.Console;
+using Microsoft.EntityFrameworkCore.Storage;// интерфейс IDbContextTransaction
 
 
 
 WriteLine($"Using {ProjectConstants.DatabaseProvider} database provider.");
-QueryingCategories();
+//if (AddProduct(categoryId: 6,
+//productName: "Viktor's Program", price: 700M))
+//{
+//    WriteLine("Add product successful.");
+//}
+
+//if (IncreaseProductPrice(
+//productNameStartsWith: "Cote", amount: 50M))
+//{
+//    WriteLine("Update product price successful.");
+//}
+//ListProducts();
+//QueryingCategories();
 //FilteredIncludes();
 //QueryingProducts();
 //QueryingWithLike();
@@ -60,13 +72,11 @@ static void QueryingCategories()
             explicitloading = (ReadKey().Key == ConsoleKey.Y);
             WriteLine();
         }
-
         if ((categories is null) || (!categories.Any()))
         {
             WriteLine("No categories found.");
             return;
         }
-
         foreach (Category c in categories)
         {
             if (explicitloading)
@@ -163,6 +173,100 @@ static void QueryingWithLike()
         {
             WriteLine("{0} has {1} units in stock. Discontinued? {2}",
 p.ProductName, p.Stock, p.Discontinued);
+        }
+    }
+}
+
+
+//if (AddProduct(categoryId: 6,
+//productName: "Viktor's Program", price: 700M))
+//{
+//    WriteLine("Add product successful.");
+//}
+static bool AddProduct(int categoryId, string productName, decimal? price)
+{
+    using (Northwind db = new())
+    {
+        Product p = new()
+        {
+            CategoryId = categoryId,
+            ProductName = productName,
+            Cost = price
+        };
+        // помечаем продукт как добавленный к отслеживанию изменений
+        db.Products.Add(p);
+        // сохранение отслеживаемых изменений в базе данных
+        int affected = db.SaveChanges();
+        return (affected == 1);
+    }
+}
+
+static void ListProducts()
+{
+    using (Northwind db = new())
+    {
+        WriteLine("{0,-3} {1,-35} {2,10} {3,5} {4}",
+        "Id", "Product Name", "Cost", "Stock", "Disc.");
+        foreach (Product p in db.Products.OrderByDescending(product => product.Cost))
+        {
+         
+
+            WriteLine("{0:000} {1,-35} {2,8:$#,##0.00} {3,5} {4}",
+            p.ProductId, p.ProductName, p.Cost, p.Stock, p.Discontinued);
+        }
+    }
+}
+
+
+
+//productNameStartsWith: "Cote", amount: 50M))
+//{
+//    WriteLine("Update product price successful.");
+//}
+static bool IncreaseProductPrice(string productNameStartsWith, decimal amount)
+{
+    using (Northwind db = new())
+    {// получаем первый продукт, название которого начинается с имени
+        Product updateProduct = db.Products.First(
+        p => p.ProductName.StartsWith(productNameStartsWith));
+        updateProduct.Cost += amount;
+        int affected = db.SaveChanges();
+        return (affected == 1);
+    }
+}
+
+//if (AddProduct(categoryId: 6,
+//productName: "Viktor's Program", price: 700M))
+//{
+//    WriteLine("Add product successful.");
+//}
+
+int deleted = DeleteProducts(productNameStartsWith: "Viktor");
+WriteLine($"{deleted} product(s) were deleted.");
+Console.WriteLine(new string('-',100));
+ListProducts();
+static int DeleteProducts(string productNameStartsWith)
+{
+    using (Northwind db = new())
+    {
+        using (IDbContextTransaction t = db.Database.BeginTransaction())
+        {
+            WriteLine("Transaction isolation level: {0}",
+            arg0: t.GetDbTransaction().IsolationLevel);
+            IQueryable<Product>? products = db.Products?.Where(
+        p => p.ProductName.StartsWith(productNameStartsWith));
+            if (products is null)
+            {
+                WriteLine("No products found to delete.");
+                return 0;
+            }
+            else
+            {
+                db.Products.RemoveRange(products);
+            }
+            int affected = db.SaveChanges();
+            t.Commit();
+            return affected;
         }
     }
 }
