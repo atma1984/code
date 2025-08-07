@@ -13,9 +13,11 @@ public class Academy : DbContext
        
         WriteLine($"Using {path} database file.");
         //optionsBuilder.UseSqlite($"Filename={path}");
-        //optionsBuilder.UseSqlServer(@"Data Source=.;Initial Catalog= Academy; Integrated Security = true; MultipleActiveResultSets = true; ");
+        //optionsBuilder.UseSqlServer(@"Data Source=.;Initial Catalog= Academy;
+        //Integrated Security = true; MultipleActiveResultSets = true; ");
 
-        string connection = "Data Source = NKMS0310232\\MSSQLSERVER_CORE; Initial Catalog = Academy; User ID = sa; Password = VjzLjxf2020!; Encrypt = False;MultipleActiveResultSets=True;";
+        string connection = "Data Source = NKMS0310232\\MSSQLSERVER_CORE; Initial Catalog = " +
+        "Academy; User ID = sa; Password = VjzLjxf2020!; Encrypt = False;MultipleActiveResultSets=True;";
         optionsBuilder.UseSqlServer(connection);
 
     }
