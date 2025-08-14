@@ -1,7 +1,8 @@
 ﻿
 
 using System.ComponentModel.DataAnnotations; // [Required], [StringLength]
-using System.ComponentModel.DataAnnotations.Schema; // [Column]
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization; // [Column]
 namespace Packt.Shared;
 public class Product
 {
@@ -20,5 +21,6 @@ public class Product
     // 🔑 Внешний ключ
     public int CategoryId { get; set; }
     // 🔄 Навигационное свойство к категории
+    [JsonIgnore]
     public virtual Category Category { get; set; } = null!;
 }
