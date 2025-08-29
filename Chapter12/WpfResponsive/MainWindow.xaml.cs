@@ -72,7 +72,7 @@ namespace WpfResponsive
                 await reader.CloseAsync();
                 await connection.CloseAsync();
             }
-           
+            EmployeesListBox.Items.Add($"Async: {timer.ElapsedMilliseconds:N0}ms");
         }
       
             
