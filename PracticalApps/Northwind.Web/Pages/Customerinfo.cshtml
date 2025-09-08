@@ -1,0 +1,20 @@
+﻿@page
+@model Northwind.Web.Pages.CustomerinfoModel
+@if (Model.Customer != null)
+{
+    <h3>@Model.Customer.ContactName</h3>
+    <p>Company: @Model.Customer.CompanyName</p>
+    <p>Country: @Model.Customer.Country</p>
+
+    <h4>Orders</h4>
+    <ul>
+        @foreach (var order in Model.Orders)
+        {
+            <li>Order ID: @order.OrderId, Order Date: @order.OrderDate</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No customer found.</p>
+}

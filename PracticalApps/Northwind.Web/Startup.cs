@@ -22,8 +22,8 @@ namespace Northwind.Web
 
             app.Use(async (HttpContext context, Func<Task> next) =>
             {
-                var rep = context.GetEndpoint() as RouteEndpoint;
-                RouteEndpoint? Rep = context.GetEndpoint() as RouteEndpoint;
+             
+                RouteEndpoint? rep = context.GetEndpoint() as RouteEndpoint;
                 if (rep is not null)
                 {
                     WriteLine($"Endpoint name: {rep.DisplayName}");

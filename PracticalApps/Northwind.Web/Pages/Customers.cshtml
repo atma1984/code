@@ -5,6 +5,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th>Country</th>
             <th>Company</th>
             <th>Contact</th>
         </tr>
@@ -12,11 +13,17 @@
     <tbody>
         @if (Model.Customers != null)
           {
-              foreach (var c in Model.Customers)
+              foreach (var c in Model.Customers.OrderBy(counry => counry.Country))
               {
                 <tr>
+                    <td>@c.Country</td>
+                   
                     <td>@c.CompanyName</td>
-                    <td>@c.ContactName</td>
+					<td>
+                        <a class="btn btn-primary" href="/CustomerInfo?id=@c.CustomerId">
+                            @c.ContactName
+                         </a>
+                    </td>
                 </tr>
         }
 }
