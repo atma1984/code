@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Northwind.Mvc.Data;
+using Packt.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,13 @@ options => options.SignIn.RequireConfirmedAccount = true)
 .AddRoles<IdentityRole>() // включить управление ролями
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+
+// если используете SQL Server
+string sqlServerConnection = builder.Configuration.GetConnectionString("NorthwindConnection");
+builder.Services.AddNorthwindContext(sqlServerConnection);
+
+
+// если
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
