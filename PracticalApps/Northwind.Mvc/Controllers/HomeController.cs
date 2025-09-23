@@ -55,11 +55,11 @@ namespace Northwind.Mvc.Controllers
             return View(model); // передаем модель для просмотра и возвращаем результат
         }
 
-        public IActionResult View()
-        {
+        //public IActionResult View()
+        //{
            
-            return View(); // передача модели представлению
-        }
+        //    return View(); // передача модели представлению
+        //}
 
         [Route("private")]
         [Authorize(Roles = "Administrators")]
