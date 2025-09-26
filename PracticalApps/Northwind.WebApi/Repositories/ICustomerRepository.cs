@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Packt.Shared; // Customer
 namespace Northwind.WebApi.Repositories;
-public interface IcustomerRepository
+public interface ICustomerRepository
 {
     Task<Customer?> CreateAsync(Customer c);
     Task<IEnumerable<Customer>> RetrieveAllAsync();
