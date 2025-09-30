@@ -1,7 +1,9 @@
 ﻿@using Packt.Shared
+@using Northwind.Common
 @{
     ViewData["Title"] = "Home Page";
     string currentItem = "";
+    WeatherForecast[]? weather = ViewData["weather"] as WeatherForecast[];
 }
 
 @model HomeIndexViewModel
@@ -12,6 +14,24 @@
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
     <p class="alert alert-primary">@DateTime.Now.ToLongTimeString()</p>
     <p><a asp-action="ModelBinding" asp-controller="Home">Binding</a></p>
+    <p>
+        <h4>Five-Day Weather Forecast</h4>
+        @if ((weather is null) || (!weather.Any()))
+        {
+        <p>No weather forecasts found.</p>
+    }
+    else
+    {
+        <table class="table table-info">
+            <tr>
+                @foreach (WeatherForecast w in weather)
+                {
+                    <td>@w.Date.ToString("ddd d MMM") will be @w.Summary</td>
+                }
+            </tr>
+        </table>
+    }
+    </p>
 </div>
 @if (Model is not null)
 {
@@ -99,6 +119,10 @@ currentItem = "";
 <form asp-action="Customers" method="get">
     <input name="country" placeholder="Enter a country" />
     <input type="submit" />
+</form>
+<h3>Form customers for add, show all list and delete customer</h3>
+<form asp-action="CustomersAdd" method="get">
+    <input type="submit" value="Открыть форму" />
 </form>
 <div class="text-center">
     <p id="intro"></p>

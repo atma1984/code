@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Northwind.Mvc.Models; // ErrorViewModel
 using Packt.Shared; // NorthwindContext
 using static System.Console;
+using Northwind.Common;
 
 
 namespace Northwind.Mvc.Controllers
@@ -42,7 +43,26 @@ namespace Northwind.Mvc.Controllers
             Categories: await db.Categories.ToListAsync(),
             Products: await db.Products.ToListAsync()
             );
-             return View(model); // передача модели представлению
+
+
+            try
+            {
+                HttpClient client = clientFactory.CreateClient(
+                name: "Minimal.WebApi");
+                HttpRequestMessage request = new(
+                method: HttpMethod.Get, requestUri: "api/weather");
+                HttpResponseMessage response = await client.SendAsync(request);
+                ViewData["weather"] = await response.Content
+                .ReadFromJsonAsync<WeatherForecast[]>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"The Minimal.WebApi service is not responding.Exception: { ex.Message}");
+                
+                
+            ViewData["weather"] = Enumerable.Empty<WeatherForecast>().ToArray();
+            }
+            return View(model); // передача модели представлению
         }
 
         public async Task<IActionResult> Customers(string country)
@@ -64,6 +84,18 @@ namespace Northwind.Mvc.Controllers
             HttpResponseMessage response = await client.SendAsync(request);
             IEnumerable<Customer>? Model = await response.Content
             .ReadFromJsonAsync<IEnumerable<Customer>>();
+            return View(Model);
+        }
+
+        public async Task<IActionResult> CustomersAdd()
+        {
+        
+            ViewData["Title"] = "All Customers Worldwide";
+
+            var Model = await db.Customers.ToListAsync();
+           
+
+
             return View(Model);
         }
 

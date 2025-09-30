@@ -17,7 +17,21 @@ configureClient: options =>
 {
 options.BaseAddress = new Uri("https://localhost:5002/");
 
-options.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json", 1.0));});
+    options.DefaultRequestHeaders.Accept.Add(
+    new MediaTypeWithQualityHeaderValue(
+    "application/json", 1.0));
+});
+
+builder.Services.AddHttpClient(name: "Minimal.WebApi",
+configureClient: options =>
+{
+    options.BaseAddress = new Uri("https://localhost:5003/");
+    options.DefaultRequestHeaders.Accept.Add(
+    new MediaTypeWithQualityHeaderValue(
+    "application/json", 1.0));
+});
+
+
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<ApplicationDbContext>();

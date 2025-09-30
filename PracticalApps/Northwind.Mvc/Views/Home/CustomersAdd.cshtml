@@ -1,0 +1,78 @@
+﻿@using Packt.Shared
+@model IEnumerable<Customer>
+<h2>@ViewData["Title"]</h2>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+
+<div class="container">
+	<div class="left">
+		<button>Button 1</button>
+		<button>Button 2</button>
+		<button>Button 3</button>
+	</div>
+
+<div class="right">
+<table class="table">
+	<thead>
+		<tr>
+			<th>Company Name</th>
+			<th>Contact Name</th>
+			@* <th>Address</th> *@
+			<th>Phone</th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (Model is not null)
+		{
+			@foreach (Customer c in Model)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => c.CompanyName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => c.ContactName)
+					</td>
+					@* <td> *@
+						@* @Html.DisplayFor(modelItem => c.Address)
+						@Html.DisplayFor(modelItem => c.City)
+						@Html.DisplayFor(modelItem => c.Region)
+						@Html.DisplayFor(modelItem => c.Country)
+						@Html.DisplayFor(modelItem => c.PostalCode) *@
+					@* </td> *@
+					<td>
+						@Html.DisplayFor(modelItem => c.Phone)
+					</td>
+				</tr>
+			}
+		}
+	</tbody>
+</table>
+</div>
+</div>
+
+<style>
+	.container {
+		display: flex; /* Используем Flexbox */
+		height: 500vh; /* Высота 100% от экрана */
+		width: 200%; /* Ширина 100% от экрана */
+	}
+	.left {
+		flex: 1; /* Занимает 50% ширины */
+		padding: 20px;
+		overflow-y: auto; /* Окно прокручиваемое по вертикали */
+		background-color: #f9f9f9; /* Легкий фон */
+	}
+
+	/* Правая часть (элементы управления) */
+	.right {
+		flex: 1; /* Занимает 50% ширины */
+		padding: 20px;
+		background-color: #f4f4f4; /* Легкий фон */
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+</style>
