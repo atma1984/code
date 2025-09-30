@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.Mvc", "Northwind.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.WebApi", "Northwind.WebApi\Northwind.WebApi.csproj", "{A468ECC5-F287-45B4-A637-298A0AEA627E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.Common", "Northwind.Common\Northwind.Common.csproj", "{7C51832B-05F9-4817-984F-8AA0EC206093}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Minimal.WebApi", "Minimal.WebApi\Minimal.WebApi.csproj", "{CE8EB382-DE8A-4EC8-BE55-098436D2BAC6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{A468ECC5-F287-45B4-A637-298A0AEA627E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A468ECC5-F287-45B4-A637-298A0AEA627E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A468ECC5-F287-45B4-A637-298A0AEA627E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C51832B-05F9-4817-984F-8AA0EC206093}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C51832B-05F9-4817-984F-8AA0EC206093}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C51832B-05F9-4817-984F-8AA0EC206093}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C51832B-05F9-4817-984F-8AA0EC206093}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE8EB382-DE8A-4EC8-BE55-098436D2BAC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE8EB382-DE8A-4EC8-BE55-098436D2BAC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE8EB382-DE8A-4EC8-BE55-098436D2BAC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE8EB382-DE8A-4EC8-BE55-098436D2BAC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
