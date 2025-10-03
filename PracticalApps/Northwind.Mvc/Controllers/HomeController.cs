@@ -1,15 +1,19 @@
 using System.Collections.Generic;
 using System.Diagnostics;// Activity
+using System.Diagnostics.Metrics;
 using System.IO.Pipelines;
 using System.Net.Http;
+using Azure;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc; // Controller, IactionResult
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Northwind.Common;
 using Northwind.Mvc.Models; // ErrorViewModel
 using Packt.Shared; // NorthwindContext
 using static System.Console;
-using Northwind.Common;
 
 
 namespace Northwind.Mvc.Controllers
@@ -82,9 +86,71 @@ namespace Northwind.Mvc.Controllers
             HttpRequestMessage request = new( method: HttpMethod.Get, requestUri: uri);
            
             HttpResponseMessage response = await client.SendAsync(request);
-            IEnumerable<Customer>? Model = await response.Content
-            .ReadFromJsonAsync<IEnumerable<Customer>>();
+            IEnumerable<Customer>? Model = await response.Content.ReadFromJsonAsync<IEnumerable<Customer>>();
+           
             return View(Model);
+        }
+
+
+
+        public async Task<Customer?> CreateCustomer(string customer_name,string customer_id)
+        {
+            string uri;
+           
+            if (string.IsNullOrEmpty(customer_id))
+            {
+                //return BadRequest("Поле customer_id не может быть пустым");
+                return null;
+            }
+            else
+            {
+                Customer New_c = new Customer();
+                New_c.CustomerId = customer_id.ToUpper();
+                New_c.CompanyName = customer_name;
+                New_c.ContactName = "Fack";
+                ViewData["Title"] = $"Customer is \"{customer_name}\"";
+                uri = $"api/customers/?c={New_c}";
+                HttpClient client = clientFactory.CreateClient(name: "Northwind.WebApi");
+                var content = JsonContent.Create(New_c);
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, uri)
+                {
+                    Content = content // Добавляем контент в запрос (правильный синтаксис)
+                };
+
+                    HttpResponseMessage response = await client.SendAsync(request);
+
+              
+                    Customer? Model = await response.Content.ReadFromJsonAsync<Customer>();
+
+                    return Model;
+               
+            }
+        }
+
+        public async Task<IActionResult> FindCustomer(string customer_id)
+        {
+            string uri;
+            if (string.IsNullOrEmpty(customer_id))
+            {
+                ViewData["Title"] = "Information about All customers";
+                uri = "api/customers/";
+            }
+            else
+            {
+                ViewData["Title"] = $"Information about the found customer";
+                uri = $"api/customers/{customer_id}";
+            }
+            HttpClient client = clientFactory.CreateClient(name: "Northwind.WebApi");
+            HttpRequestMessage request = new(method: HttpMethod.Get, requestUri: uri);
+
+            HttpResponseMessage response = await client.SendAsync(request);
+            //var responseContent = await response.Content.ReadAsStringAsync();
+            //Console.WriteLine(responseContent);  // Логирование содержимого ответа
+            var responseContent = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseContent);  // Логирование содержимого ответа
+            Customer? Model = await response.Content.ReadFromJsonAsync<Customer?>();
+            return View(Model);
+            
         }
 
         public async Task<IActionResult> CustomersAdd()

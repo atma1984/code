@@ -2,72 +2,94 @@
 @model IEnumerable<Customer>
 <h2>@ViewData["Title"]</h2>
 
-	<div class="left">
-		<button>Button 1</button>
-		<button>Button 2</button>
-		<button>Button 3</button>
-	</div>
 
-<div class="right">
-<table class="table">
-	<thead>
-		<tr>
-			<th>Company Name</th>
-			<th>Contact Name</th>
-			@* <th>Address</th> *@
-			<th>Phone</th>
-		</tr>
-	</thead>
-	<tbody>
-		@if (Model is not null)
-		{
-			@foreach (Customer c in Model)
-			{
-				<tr>
-					<td>
-						@Html.DisplayFor(modelItem => c.CompanyName)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => c.ContactName)
-					</td>
-					@* <td> *@
-						@* @Html.DisplayFor(modelItem => c.Address)
-						@Html.DisplayFor(modelItem => c.City)
-						@Html.DisplayFor(modelItem => c.Region)
-						@Html.DisplayFor(modelItem => c.Country)
-						@Html.DisplayFor(modelItem => c.PostalCode) *@
-					@* </td> *@
-					<td>
-						@Html.DisplayFor(modelItem => c.Phone)
-					</td>
-				</tr>
-			}
-		}
-	</tbody>
-</table>
+
+
+<div class="d-flex" >
+    <!-- Левый блок (кнопки, текст или любой другой контент) -->
+    <style>
+        .form-container {
+            margin-bottom: 20px; /* Отступ снизу для первого блока */
+        }
+
+        .me-3:nth-of-type(2) {
+            margin-top: 20px; /* Отступ сверху для второго блока */
+        }
+
+   /*      input {
+            box-sizing: border-box;
+        } */
+
+    </style>
+
+    <div class="form-container" style="width: 20%;">
+        <div class="me-3">
+            <form asp-action="CreateCustomer" method="post">
+                <div class="form-group">
+                    <input name="customer_id" placeholder="Enter a customer id" style="width: 100%;" />
+                </div>
+                <div class="form-group">
+                    <input name="customer_name" placeholder="Enter a customer name" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create customer" class="submit-button" />
+                </div>
+            </form>
+        </div>
+
+        <div class="me-3">
+            <form asp-action="FindCustomer" method="get">
+                <div class="form-group">
+                    <input name="customer_id" placeholder="Enter a customer id for searching" style="width: 100%;" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Find customer in base" class="submit-button" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+   
+  
+
+    <!-- Правый блок с таблицей -->
+    <div class="flex-grow-1">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Customer ID</th>
+                    <th>Company Name</th>
+                    <th>Contact Name</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model is not null)
+                {
+                    @foreach (Customer c in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => c.CustomerId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => c.CompanyName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => c.ContactName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => c.Phone)
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
 
-<style>
-	.container {
-		display: flex; /* Используем Flexbox */
-		height: 500vh; /* Высота 100% от экрана */
-		width: 200%; /* Ширина 100% от экрана */
-	}
-	.left {
-		flex: 1; /* Занимает 50% ширины */
-		padding: 20px;
-		overflow-y: auto; /* Окно прокручиваемое по вертикали */
-		background-color: #f9f9f9; /* Легкий фон */
-	}
 
-	/* Правая часть (элементы управления) */
-	.right {
-		flex: 1; /* Занимает 50% ширины */
-		padding: 20px;
-		background-color: #f4f4f4; /* Легкий фон */
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-	}
-</style>
+
+

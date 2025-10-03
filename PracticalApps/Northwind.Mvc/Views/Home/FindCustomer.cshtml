@@ -1,0 +1,45 @@
+﻿@using Packt.Shared
+@model Customer
+<h2>@ViewData["Title"]</h2>
+@if (Model is not null)
+{
+    <table class="table table-bordered">
+        <tr>
+            <th>Customer ID</th>
+            <td>@Html.DisplayFor(modelItem => Model.CustomerId)</td>
+        </tr>
+        <tr>
+            <th>Company Name</th>
+            <td>@Html.DisplayFor(modelItem => Model.CompanyName)</td>
+        </tr>
+        <tr>
+            <th>Contact Name</th>
+            <td>@Html.DisplayFor(modelItem => Model.ContactName)</td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td>@Html.DisplayFor(modelItem => Model.Address)</td>
+        </tr>
+        <tr>
+            <th>City</th>
+            <td>@Html.DisplayFor(modelItem => Model.City)</td>
+        </tr>
+        <tr>
+            <th>Region</th>
+            <td>@Html.DisplayFor(modelItem => Model.Region)</td>
+        </tr>
+        <tr>
+            <th>Country</th>
+            <td>@Html.DisplayFor(modelItem => Model.Country)</td>
+        </tr>
+        <tr>
+            <th>Postal Code</th>
+            <td>@Html.DisplayFor(modelItem => Model.PostalCode)</td>
+        </tr>
+        <tr>
+            <th>Phone</th>
+            <td>@Html.DisplayFor(modelItem => Model.Phone)</td>
+        </tr>
+    </table>
+
+		}
