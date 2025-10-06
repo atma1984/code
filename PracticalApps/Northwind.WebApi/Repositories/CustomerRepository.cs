@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking; // EntityEntry<T>
+﻿using System.Collections.Concurrent;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking; // EntityEntry<T>
 using Packt.Shared; // Customer
-using System.Collections.Concurrent;
 
 namespace Northwind.WebApi.Repositories;
 
@@ -54,6 +55,64 @@ public class CustomerRepository : ICustomerRepository
             return null;
         }
     }
+    //public async Task<Customer?> UpdateAsync(string id, Customer c)
+    //{
+    //    // нормализуем идентификатор клиента
+    //    id = id.ToUpper();
+    //    c.CustomerId = c.CustomerId.ToUpper();
+
+    //    // Загружаем сущность, но не отслеживаем её
+    //    var existingCustomer = await db.Customers
+    //        .AsNoTracking()
+    //        .FirstOrDefaultAsync(customer => customer.CustomerId == id);
+
+    //    if (existingCustomer == null)
+    //    {
+    //        // Если клиент не найден, возвращаем null
+    //        return null;
+    //    }
+
+    //    // Теперь обновляем сущность, которая не отслеживается
+    //    db.Customers.Update(c);
+    //    int affected = await db.SaveChangesAsync();
+
+    //    if (affected == 1)
+    //    {
+    //        // Обновляем в кэше, если необходимо
+    //        return UpdateCache(id, c);
+    //    }
+
+    //    return null;
+    //}
+    public async Task<Customer?> UpdateAsync(string id, Customer c)
+    {
+        // нормализуем идентификатор клиента
+        id = id.ToUpper();
+        c.CustomerId = c.CustomerId.ToUpper();
+
+        // Загружаем сущность из базы данных
+        var existingCustomer = await db.Customers
+            .FirstOrDefaultAsync(customer => customer.CustomerId == id);
+
+        if (existingCustomer == null)
+        {
+            // Если клиент не найден, возвращаем null
+            return null;
+        }
+
+        // Обновляем значения существующей сущности
+        db.Entry(existingCustomer).CurrentValues.SetValues(c);
+
+        int affected = await db.SaveChangesAsync();
+
+        if (affected == 1)
+        {
+            // Обновляем в кэше, если необходимо
+            return UpdateCache(id, c);
+        }
+
+        return null;
+    }
     private Customer UpdateCache(string id, Customer c)
     {
         Customer? old;
@@ -106,19 +165,19 @@ public class CustomerRepository : ICustomerRepository
         return Task.FromResult(c);
     }
 
-    public async Task<Customer?> UpdateAsync(string id, Customer c)
-    {
-        // нормализуем идентификатор клиента
-        id = id.ToUpper();
-        c.CustomerId = c.CustomerId.ToUpper();
-        // обновляем в базе
-        db.Customers.Update(c);
-        int affected = await db.SaveChangesAsync();
-        if (affected == 1)
-        {
-            // обновляем в кэше
-            return UpdateCache(id, c);
-        }
-        return null;
-    }
+    //public async Task<Customer?> UpdateAsync(string id, Customer c)
+    //{
+    //    // нормализуем идентификатор клиента
+    //    id = id.ToUpper();
+    //    c.CustomerId = c.CustomerId.ToUpper();
+    //    // обновляем в базе
+    //    db.Customers.Update(c);
+    //    int affected = await db.SaveChangesAsync();
+    //    if (affected == 1)
+    //    {
+    //        // обновляем в кэше
+    //        return UpdateCache(id, c);
+    //    }
+    //    return null;
+    //}
 }

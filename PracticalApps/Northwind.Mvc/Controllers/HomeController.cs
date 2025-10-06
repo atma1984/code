@@ -3,6 +3,7 @@ using System.Diagnostics;// Activity
 using System.Diagnostics.Metrics;
 using System.IO.Pipelines;
 using System.Net.Http;
+using AspNetCoreGeneratedDocument;
 using Azure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -93,7 +94,7 @@ namespace Northwind.Mvc.Controllers
 
 
 
-        public async Task<Customer?> CreateCustomer(string customer_name,string customer_id)
+        public async Task<IActionResult> CreateCustomer(string customer_name,string customer_id)
         {
             string uri;
            
@@ -122,8 +123,61 @@ namespace Northwind.Mvc.Controllers
               
                     Customer? Model = await response.Content.ReadFromJsonAsync<Customer>();
 
-                    return Model;
+                    return View(Model);
                
+            }
+        }
+
+
+        public async Task<IActionResult> UpdateCustomer(string customer_id,
+                                                    string company_name,
+                                                    string contact_name,
+                                                    string contac_title,
+                                                    string phone,
+                                                    string city,
+                                                    string country)
+        {
+            string uri;
+
+            if (string.IsNullOrEmpty(customer_id) || string.IsNullOrEmpty(company_name))
+            {
+                return BadRequest("ѕоле customer_id и company_name не могут быть пустыми");
+          
+            }
+            else
+            {
+                Customer Update_c = new Customer();
+                Update_c.CustomerId = customer_id.ToUpper();
+                Update_c.CompanyName = company_name;
+                Update_c.ContactName = contact_name;
+                Update_c.ContactTitle = contac_title;
+                Update_c.Phone = phone;
+                Update_c.City = city;
+                Update_c.Country = country;              
+                ViewData["Title"] = $"Updated company data for \"{company_name}\"";
+                uri = $"api/customers/{customer_id}";
+                HttpClient client = clientFactory.CreateClient(name: "Northwind.WebApi");
+                var content = JsonContent.Create(Update_c);
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, uri)
+                {
+                    Content = content // ƒобавл€ем контент в запрос (правильный синтаксис)
+                };
+
+                HttpResponseMessage response = await client.SendAsync(request);
+
+
+                // ѕровер€ем, если ответ от API был успешным (например, статус 204)
+                if (response.IsSuccessStatusCode)
+                {
+                    return NoContent();  // ¬озвращаем NoContent, если данных не нужно возвращать
+                }
+                else
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error Response: {response.StatusCode} - {responseContent}");
+                    return StatusCode((int)response.StatusCode, $"Failed to update customer. Response: {responseContent}");
+                }
+
             }
         }
 
@@ -146,8 +200,8 @@ namespace Northwind.Mvc.Controllers
             HttpResponseMessage response = await client.SendAsync(request);
             //var responseContent = await response.Content.ReadAsStringAsync();
             //Console.WriteLine(responseContent);  // Ћогирование содержимого ответа
-            var responseContent = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(responseContent);  // Ћогирование содержимого ответа
+            //var responseContent = await response.Content.ReadAsStringAsync();
+            //Console.WriteLine(responseContent);  // Ћогирование содержимого ответа
             Customer? Model = await response.Content.ReadFromJsonAsync<Customer?>();
             return View(Model);
             

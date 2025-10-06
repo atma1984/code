@@ -85,14 +85,17 @@ public class CustomersController : ControllerBase
         c.CustomerId = c.CustomerId.ToUpper();
         if (c == null || c.CustomerId != id)
         {
+            Console.WriteLine("Meggage----------BadRequest()BadRequest()BadRequest()BadRequest()BadRequest()BadRequest()");
             return BadRequest(); // 400 – некорректный запрос
         }
         Customer? existing = await repo.RetrieveAsync(id);
         if (existing == null)
         {
+            Console.WriteLine("Meggage----------NotFound();NotFound();NotFound();NotFound();NotFound();");
             return NotFound(); // 404 – ресурс не найден
         }
         await repo.UpdateAsync(id, c);
+        Console.WriteLine("Meggage----------NoContentResult()NoContentResult()NoContentResult()NoContentResult()NoContentResult()");
         return new NoContentResult(); // 204 – контент отсутствует
     }
 

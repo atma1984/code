@@ -1,11 +1,11 @@
 ﻿@using Packt.Shared
 @model IEnumerable<Customer>
-<h2>@ViewData["Title"]</h2>
 
 
 
 
-<div class="d-flex" >
+
+<div class="d-flex" style="flex-direction: column;">
     <!-- Левый блок (кнопки, текст или любой другой контент) -->
     <style>
         .form-container {
@@ -16,10 +16,9 @@
             margin-top: 20px; /* Отступ сверху для второго блока */
         }
 
-   /*      input {
-            box-sizing: border-box;
-        } */
-
+        .me-3 {
+            margin-bottom: 10px; /* Отступ снизу для каждого блока */
+        }
     </style>
 
     <div class="form-container" style="width: 20%;">
@@ -48,6 +47,36 @@
             </form>
         </div>
     </div>
+    <h2>@ViewData["Title"]</h2>
+    <div class="me-3">
+        <form asp-action="UpdateCustomer" method="put" style="width: 20%;">
+            <div class="form-group">
+                <input name="customer_id" placeholder="Enter a customer id for updating" style="width: 100%;" />
+            </div>
+            <div class="form-group">
+                <input name="company_name" placeholder="Enter a customer company" />
+            </div>
+            <div class="form-group">
+                <input name="contact_name" placeholder="Enter a contact name" style="width: 100%;" />
+            </div>
+            <div class="form-group">
+                <input name="contac_title" placeholder="Enter a contac title" style="width: 100%;" />
+            </div>
+            <div class="form-group">
+                <input name="phone" placeholder="Enter a contact phone" />
+            </div>
+            <div class="form-group">
+                <input name="city" placeholder="Enter a customer id" style="width: 100%;" />
+            </div>
+            <div class="form-group">
+                <input name="country" placeholder="Enter a country" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Update customer" class="submit-button" />
+            </div>
+        </form>
+    </div>
+</div>
 
    
   
