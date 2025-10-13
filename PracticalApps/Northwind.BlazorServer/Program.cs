@@ -11,6 +11,8 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();
 
+Console.WriteLine("Application starting...");
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

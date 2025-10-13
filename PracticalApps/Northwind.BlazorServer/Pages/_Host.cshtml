@@ -1,6 +1,6 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Components.Web
-@* TagHelper s  TagHelpers узнать подробнее что зазверь *@
+@* TagHelper s  TagHelpers узнать подробнее что за зверь *@
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,12 +11,16 @@
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="Northwind.BlazorServer.styles.css" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="favicon.png"/>
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <!-- Компонент HeadOutlet для управления содержимым тега <head> -->
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
+    <!-- Компонент App, который отвечает за рендеринг вашего Blazor приложения -->
     <component type="typeof(App)" render-mode="ServerPrerendered" />
 
+    <!-- UI для ошибок Blazor, если что-то пошло не так -->
     <div id="blazor-error-ui">
         <environment include="Staging,Production">
             An error has occurred. This application may no longer respond until reloaded.
@@ -28,6 +32,7 @@
         <a class="dismiss">🗙</a>
     </div>
 
+    <!-- Сценарий для работы с Blazor Server -->
     <script src="_framework/blazor.server.js"></script>
 </body>
 </html>
