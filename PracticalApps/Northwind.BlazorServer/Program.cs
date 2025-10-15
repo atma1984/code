@@ -1,17 +1,20 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Northwind.BlazorServer.Data;
+using Packt.Shared; // метод расширения AddNorthwindContext
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddNorthwindContext();
+builder.Services.AddTransient<INorthwindService, NorthwindService>();
+
+
 builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();
-
-Console.WriteLine("Application starting...");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
