@@ -1,0 +1,25 @@
+﻿
+<h3>Таблица умножения для @Number</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Число</th>
+            <th>Результат</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 1; i <= 10; i++)
+        {
+            <tr>
+                <td>@Number x @i</td>
+                <td>@(Number* i)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public int Number { get; set; }
+}

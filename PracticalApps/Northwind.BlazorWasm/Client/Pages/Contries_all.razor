@@ -1,0 +1,53 @@
+﻿@using Microsoft.EntityFrameworkCore @* ToListAsync extension method *@
+@page "/countries_all"
+@inject HttpClient Http
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Country</th>
+
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (countries is not null)
+		{
+			@foreach (string c in countries.Distinct())
+			{
+				<tr>
+					<td>@c.</td>
+
+				@* 	<td>
+						<a class="btn btn-info" href="editcustomer/">
+							<i class="oi oi-pencil"></i>
+						</a>
+						<a class="btn btn-danger"
+						   href="deletecustomer/">
+							<i class="oi oi-trash"></i>
+						</a>
+					</td> *@
+				</tr>
+			}
+		}
+
+	</tbody>
+</table>
+
+
+@code {
+	private List<string> countries = new List<string>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			// Получаем список стран через API
+			countries = await Http.GetFromJsonAsync<List<string>>("api/customers/countries_all");
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine("Error fetching countries: " + ex.Message);
+		}
+	}
+}

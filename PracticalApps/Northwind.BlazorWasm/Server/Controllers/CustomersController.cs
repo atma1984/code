@@ -17,6 +17,38 @@ public class CustomersController : ControllerBase
     {
         return await db.Customers.ToListAsync();
     }
+
+    [HttpGet("countries_all")]
+    public async Task<ActionResult<List<string>>> Countries_all()
+    {
+        List<string> countries_list = new List<string>();
+        IEnumerable<Customer>? customers = await db.Customers.ToListAsync();
+
+        if (customers.Any()) 
+        {
+            foreach (var customer in customers)
+            {
+                if (!string.IsNullOrEmpty(customer.Country)) 
+                { 
+                countries_list.Add(customer.Country);
+            }
+
+
+            }
+        
+        
+        }
+        if (countries_list.Count != 0)
+        {
+            return Ok(countries_list);  // возвращаем успешный ответ с кодом 200 и данными
+        }
+        else
+        {
+            return NotFound("No countries found");  // возвращаем ошибку 404, если список пуст
+        }
+
+    }
+
     [HttpGet("in/{country}")] // different path to disambiguate
     public async Task<List<Customer>> GetCustomersAsync(string country)
     {
