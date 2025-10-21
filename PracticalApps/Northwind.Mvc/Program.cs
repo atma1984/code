@@ -31,6 +31,12 @@ configureClient: options =>
     "application/json", 1.0));
 });
 
+builder.Services.AddHttpClient(name: "Northwind.OData", configureClient: options =>
+{
+    options.BaseAddress = new Uri("https://localhost:5004/"); // ”бедитесь, что добавили правильный базовый адрес
+    options.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json", 1.0));
+});
+
 
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)

@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using Microsoft.AspNetCore.OData; // метод расширения AddOData
 using Microsoft.OData.Edm; // IEdmModel
 using Microsoft.OData.ModelBuilder; // ODataConventionModelBuilder
@@ -9,11 +10,13 @@ builder.WebHost.UseUrls("https://localhost:5004");
 builder.Services.AddNorthwindContext();
 builder.Services.AddControllers().AddOData(options => options
                                  // регистрация моделей OData различных версий
-                                 .AddRouteComponents(routePrefix: "catalog",
-                                 model: GetEdmModelForCatalog())
+                                 .AddRouteComponents(routePrefix: "catalog",     model: GetEdmModelForCatalog())
+                                 .AddRouteComponents(routePrefix: "ordersystem", model: GetEdmModelForOrderSystem())
+                                 .AddRouteComponents(routePrefix: "v{version}",  model: GetEdmModelForCatalog())
+                                
 
-                                 .AddRouteComponents(routePrefix: "ordersystem",
-                                 model: GetEdmModelForOrderSystem())
+                               
+                                
                                  // включение параметра запросов
                                  .Select() // включение $select для проекции
                                  .Expand() // включение $expand для навигации по сущностям
@@ -22,6 +25,14 @@ builder.Services.AddControllers().AddOData(options => options
                                  .SetMaxTop(100) // включение $top
                                  .Count() // включение $count
 );
+builder.Services.AddHttpClient(name: "Northwind.OData",
+configureClient: options =>
+{
+    options.BaseAddress = new Uri("https://localhost:5004/");
+    options.DefaultRequestHeaders.Accept.Add(
+    new MediaTypeWithQualityHeaderValue(
+    "application/json", 1.0));
+});
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

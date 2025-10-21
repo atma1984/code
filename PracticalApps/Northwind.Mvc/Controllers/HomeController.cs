@@ -127,7 +127,45 @@ namespace Northwind.Mvc.Controllers
                
             }
         }
+        public async Task<IActionResult> Services()
+        {
+            try
+            {
 
+
+
+                //string requestUri = $"https://localhost:5004/catalog/products/?$filter=startswith(ProductName, 'Cha')&$select=ProductId,ProductName,UnitPrice";
+
+                string requestUri = $"catalog/products/?$filter=startswith(ProductName, 'Cha')&$select=ProductId,ProductName,UnitPrice";
+
+
+                HttpClient client = clientFactory.CreateClient(name: "Northwind.OData");
+               
+                HttpRequestMessage request = new( method: HttpMethod.Get, requestUri);
+               
+               
+
+
+                HttpResponseMessage response = await client.SendAsync(request);
+                if (response.IsSuccessStatusCode)
+                {
+                    ViewData["productsCha"] = (await response.Content.ReadFromJsonAsync<ODataProducts>())?.Value;
+                }
+                else
+                {
+                    // Логируем статус ошибки
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogWarning($"Request failed with status code: {response.StatusCode}. Response: {responseContent}");
+                }
+                ViewData["productsCha"] = (await response.Content.ReadFromJsonAsync<ODataProducts>())?.Value;
+               
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"Northwind.OData service exception: {ex.Message}");
+            }
+            return View();
+        }
 
         public async Task<IActionResult> UpdateCustomer(string customer_id,
                                                     string company_name,
