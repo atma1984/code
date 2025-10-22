@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.Blazor.Customers"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.OData", "Northwind.OData\Northwind.OData.csproj", "{C2F157BF-48E4-4998-BB89-33A639050A90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.GraphQL", "Northwind.GraphQL\Northwind.GraphQL.csproj", "{F8D8D160-167D-4C71-84BB-213A9EBA7947}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{C2F157BF-48E4-4998-BB89-33A639050A90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2F157BF-48E4-4998-BB89-33A639050A90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2F157BF-48E4-4998-BB89-33A639050A90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8D8D160-167D-4C71-84BB-213A9EBA7947}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8D8D160-167D-4C71-84BB-213A9EBA7947}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8D8D160-167D-4C71-84BB-213A9EBA7947}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8D8D160-167D-4C71-84BB-213A9EBA7947}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

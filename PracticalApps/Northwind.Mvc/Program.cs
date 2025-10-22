@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Northwind.Mvc.Data;
 using Packt.Shared;
 using System.Net.Http.Headers; // MediaTypeWithQualityHeaderValue
+using System.Text; // кодировка
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,15 @@ builder.Services.AddHttpClient(name: "Northwind.OData", configureClient: options
 {
     options.BaseAddress = new Uri("https://localhost:5004/"); // Убедитесь, что добавили правильный базовый адрес
     options.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json", 1.0));
+});
+
+builder.Services.AddHttpClient(name: "Northwind.GraphQL",
+configureClient: options =>
+{
+    options.BaseAddress = new Uri("https://localhost:5005/");
+    options.DefaultRequestHeaders.Accept.Add(
+    new MediaTypeWithQualityHeaderValue(
+    "application/json", 1.0));
 });
 
 
