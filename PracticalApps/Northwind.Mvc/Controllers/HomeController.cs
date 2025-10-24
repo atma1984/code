@@ -16,6 +16,7 @@ using Northwind.Common;
 using Northwind.Mvc.Models; // ErrorViewModel
 using Packt.Shared; // NorthwindContext
 using static System.Console;
+using Grpc.Net.Client; // GrpcChannel
 
 
 namespace Northwind.Mvc.Controllers
@@ -129,8 +130,51 @@ namespace Northwind.Mvc.Controllers
             }
         }
 
+        public async Task<IActionResult> ServicesgRPCL()
+        {
+            try
+            {
+                using (GrpcChannel channel =GrpcChannel.ForAddress("https://localhost:5006"))
+                {
+                    Shipr.ShiprClient shipr = new(channel);
+                    ShipperReply reply = await shipr.GetShipperAsync(new ShipperRequest { ShipperId = 3 });
+
+                    ViewData["shipr"] = new Shipper
+                    {
+                        ShipperId = reply.ShipperId,
+                        CompanyName = reply.CompanyName,
+                        Phone = reply.Phone
+                    };
+                    }
+
+                }
+            catch (Exception)
+            {
+                _logger.LogWarning($"Northwind.gRPC service is not responding.");
+            }
 
 
+            try
+            {
+                using (GrpcChannel channel =
+                GrpcChannel.ForAddress("https://localhost:5006"))
+                {
+                    Greeter.GreeterClient greeter = new(channel);
+                    HelloReply reply = await greeter.SayHelloAsync(
+                    new HelloRequest { Name = "Viktor Sergeevich" });
+                    ViewData["greeting"] = "Greeting from gRPC service: " + reply.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"Northwind.gRPC service is not responding.");
+            }
+            return View();
+        }
+        public IActionResult Chat()
+        {
+            return View();
+        }
         public async Task<IActionResult> ServicesGraphQL()
         {
             try

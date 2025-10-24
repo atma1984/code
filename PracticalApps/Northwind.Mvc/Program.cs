@@ -4,6 +4,7 @@ using Northwind.Mvc.Data;
 using Packt.Shared;
 using System.Net.Http.Headers; // MediaTypeWithQualityHeaderValue
 using System.Text; // кодировка
+//using Northwind.Mvc.Hubs;  ///////////////////////////////////////// ChatHub
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +47,7 @@ configureClient: options =>
     new MediaTypeWithQualityHeaderValue(
     "application/json", 1.0));
 });
-
+builder.Services.AddSignalR();
 
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -86,7 +87,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.MapHub<ChatHub>("/chat");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

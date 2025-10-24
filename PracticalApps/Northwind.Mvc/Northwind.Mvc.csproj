@@ -6,8 +6,23 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-Northwind.Mvc-c5b2e3de-7108-4c40-a3b9-b79210cc124c</UserSecretsId>
   </PropertyGroup>
-
+	<ItemGroup>
+		<Protobuf Include="Protos\greet.proto" GrpcServices="Client" />
+		<Protobuf Include="Protos\shipper.proto" GrpcServices="Client" />
+	</ItemGroup>
   <ItemGroup>
+
+	  <PackageReference Include="Google.Protobuf" Version="3.17.3" />
+	  <PackageReference Include="Grpc.NET.Client" Version="2.38.0" />
+	  <PackageReference Include="Grpc.Tools" Version="2.38.1">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>
+			  runtime; build; native; contentfiles;
+			  analyzers; buildtransitive
+		  </IncludeAssets>
+	  </PackageReference>
+	  
+	  
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.16" />
@@ -21,8 +36,17 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+	  <PackageReference Include="Google.Protobuf" Version="3.17.3" />
+<PackageReference Include="Grpc.NET.Client" Version="2.38.0" />
+<PackageReference Include="Grpc.Tools" Version="2.38.1">
+<PrivateAssets>all</PrivateAssets>
+<IncludeAssets>runtime; build; native; contentfiles;
+analyzers; buildtransitive</IncludeAssets>
+</PackageReference>
   </ItemGroup>
 
+	
+	
   <ItemGroup>
     <ProjectReference Include="..\Northwind.Common.DataContext.SqlServer\Northwind.Common.DataContext.SqlServer.csproj" />
     <ProjectReference Include="..\Northwind.Common\Northwind.Common.csproj" />
@@ -30,6 +54,12 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Protos\greet.proto">
+      <GrpcServices>Server</GrpcServices>
+    </None>
   </ItemGroup>
 
 </Project>
