@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.GraphQL", "Northw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.gRPC", "Northwind.gRPC\Northwind.gRPC.csproj", "{80D64DB3-DCFD-4A91-9814-BB864CB5492D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.SignalR.ConsoleClient", "Northwind.SignalR.ConsoleClient\Northwind.SignalR.ConsoleClient.csproj", "{389C3294-9CCC-498D-9B84-28E4478332B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{80D64DB3-DCFD-4A91-9814-BB864CB5492D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80D64DB3-DCFD-4A91-9814-BB864CB5492D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80D64DB3-DCFD-4A91-9814-BB864CB5492D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{389C3294-9CCC-498D-9B84-28E4478332B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{389C3294-9CCC-498D-9B84-28E4478332B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{389C3294-9CCC-498D-9B84-28E4478332B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{389C3294-9CCC-498D-9B84-28E4478332B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
