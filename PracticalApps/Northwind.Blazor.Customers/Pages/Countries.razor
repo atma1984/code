@@ -1,0 +1,73 @@
+﻿@using Microsoft.EntityFrameworkCore @* ToListAsync extension method *@
+@using Northwind.BlazorServer.Data
+@page "/countries/"
+@inject INorthwindService service
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Country</th>
+			
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (countries is not null)
+		{
+				@foreach (string c in countries.Distinct())
+		{
+				<tr>
+					<td>@c.</td>
+				
+					<td>
+						<a class="btn btn-info" href="editcustomer/">
+							<i class="oi oi-pencil"></i>
+						</a>
+						<a class="btn btn-danger"
+						   href="deletecustomer/">
+							<i class="oi oi-trash"></i>
+						</a>
+					</td>
+				</tr>
+		}
+		}
+	
+	</tbody>
+</table>
+
+
+@code {
+	[Parameter]
+	public string? Country { get; set; }
+	private List<string> countries = new List<string>();
+	private IEnumerable<Customer>? customers;
+	private bool isLoading = false; // Флаг загрузки
+	protected override async Task OnInitializedAsync()
+	{
+		if (isLoading) return; // Если уже идёт загрузка, не начинаем новую операцию
+		isLoading = true; // Устанавливаем флаг загрузки
+		try
+		{
+
+			customers = await service.GetCustomersAsync();
+
+			foreach (Customer cust in customers)
+			{
+				if (!string.IsNullOrEmpty(cust.Country))
+				{
+					countries.Add(cust.Country);
+				}
+				
+			}
+
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine(ex.Message);
+		}
+		finally
+		{
+			isLoading = false; // Сбрасываем флаг загрузки
+		}
+	}
+}

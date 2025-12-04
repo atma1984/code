@@ -1,0 +1,45 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?> <!--Эта строка указывает, что файл является документом XML и использует кодировку UTF-8.-->
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Northwind.Maui.Customers.Views"
+             x:Class="Northwind.Maui.Customers.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="Entry">
+                <!-- Цвет текста (будет использоваться из динамического ресурса) -->
+                <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}" />
+                <!-- Шрифт для Entry, такой же, как для Label -->
+                <Setter Property="FontFamily" Value="OpenSansRegular" />
+                <!-- Выравнивание по горизонтали (выравнивание по началу и расширение) -->
+                <Setter Property="HorizontalOptions" Value="StartAndExpand" />
+                <!-- Ширина запроса для элемента Entry -->
+                <Setter Property="WidthRequest" Value="300" />
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
+
+
+<!--<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui" — Это корневой элемент, который указывает, что файл является приложением MAUI
+                                                                         (Multi-platform App UI). Все ресурсы и элементы интерфейса будут определяться
+                                                                          внутри этого тега.-->
+    
+<!--<Application.Resources>                                                    — Этот элемент содержит все ресурсы, такие как стили, шрифты, цвета, которые 
+                                                                           будут доступны для всего приложения. Все ресурсы для вашего приложения, включая 
+                                                                            стили и цвета, добавляются внутри этого тега.-->
+    
+<!--<ResourceDictionary>                                                  — Это контейнер для хранения ресурсов. В нем могут быть как локальные, так и подключенные ресурсы,
+                                                                            такие как цвета, шрифты и стили.-->
+
+<!--<ResourceDictionary.MergedDictionaries>                                   — Этот элемент позволяет объединить другие ресурсы в текущем словаре ресурсов. В данном случае 
+                                                                              это два ресурса, определяющие стили и цвета для вашего приложения.-->
+
+<!--<ResourceDictionary Source="Resources/Styles/Colors.xaml" /> — Это ссылка на внешний файл Colors.xaml, который содержит определения цветов для приложения.-->
+<!--<ResourceDictionary Source="Resources/Styles/Styles.xaml" /> — Это ссылка на внешний файл Styles.xaml, который содержит стили для других элементов управления в вашем приложении.-->
+    
+    

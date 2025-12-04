@@ -1,0 +1,30 @@
+﻿@using Packt.Shared
+@using Northwind.Common
+@{
+	ViewData["Title"] = "ServiceGraphQLs";
+	Product[]? seafoodProducts = ViewData["seafoodProducts"] as Product[];
+}
+<div class="text-center">
+	<h1 class="display-4">@ViewData["Title"]</h1>
+	@if (ViewData["seafoodProducts"] != null)
+	{
+		<h2>Products that start with Cha using OData</h2>
+		<p>
+			@if (seafoodProducts is not null)
+			{
+				<h2>Seafood products using GraphQL</h2>
+			<p>
+				@foreach (Product p in seafoodProducts)
+				{
+					<span class="badge bg-success">
+						@p.ProductId
+						@p.ProductName
+						-
+						@(p.UnitsInStock is null ? "0" : p.UnitsInStock.Value) in stock
+					</span>
+				}
+			</p>
+		}
+		</p>
+	}
+</div>

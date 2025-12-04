@@ -1,13 +1,12 @@
 ﻿@page "/fetchdata"
-@using Northwind.BlazorServer.Data
-@inject WeatherForecastService ForecastService
 
 <PageTitle>Weather forecast</PageTitle>
 
+@using Northwind.BlazorServer.Data
+@inject WeatherForecastService ForecastService
+
 <h1>Weather forecast</h1>
 
-<h3>Weather Forecast</h3>
-<p>Test content to check if component renders.</p>
 <p>This component demonstrates fetching data from a service.</p>
 
 @if (forecasts == null)
@@ -44,19 +43,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("Component is initializing...");
-        try
-        {
-        Console.WriteLine("Fetching weather forecast...");
-        forecasts = await ForecastService.GetForecastAsync(DateOnly.FromDateTime(DateTime.Now));
-        Console.WriteLine($"Loaded {forecasts?.Length} forecasts");
-        }
-        catch (Exception ex)
-        {
-            
-            Console.WriteLine($"Error fetching forecast: {ex.Message}");
-        }
-       
+        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
     }
-    
 }

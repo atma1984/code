@@ -1,0 +1,17 @@
+﻿@using Packt.Shared
+@using Northwind.Common
+@{
+	ViewData["Title"] = "ServicegRPC";
+}
+@if (ViewData["greeting"] != null)
+{
+	<p class="alert alert-primary">@ViewData["greeting"]</p>
+}
+
+@if (ViewData["shipr"] != null)
+{
+	Shipper? shipper = ViewData["shipr"] as Shipper;
+	<p class="alert alert-danger">
+		ShipperId: @shipper?.ShipperId, CompanyName: @shipper?.CompanyName, Phone: @shipper?.Phone
+	</p>
+}

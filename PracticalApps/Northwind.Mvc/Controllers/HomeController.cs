@@ -3,6 +3,7 @@ using System.Diagnostics;// Activity
 using System.Diagnostics.Metrics;
 using System.IO.Pipelines;
 using System.Net.Http;
+using System.Text;
 using AspNetCoreGeneratedDocument;
 using Azure;
 using Microsoft.AspNetCore.Authorization;
@@ -15,6 +16,7 @@ using Northwind.Common;
 using Northwind.Mvc.Models; // ErrorViewModel
 using Packt.Shared; // NorthwindContext
 using static System.Console;
+using Grpc.Net.Client; // GrpcChannel
 
 
 namespace Northwind.Mvc.Controllers
@@ -23,9 +25,9 @@ namespace Northwind.Mvc.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly NorthwindContext db;
-        private readonly IHttpClientFactory clientFactory; 
+        private readonly IHttpClientFactory clientFactory;
 
-        public HomeController(ILogger<HomeController> logger,NorthwindContext injectedContext, IHttpClientFactory httpClientFactory)
+        public HomeController(ILogger<HomeController> logger, NorthwindContext injectedContext, IHttpClientFactory httpClientFactory)
 
         {
 
@@ -62,10 +64,10 @@ namespace Northwind.Mvc.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogWarning($"The Minimal.WebApi service is not responding.Exception: { ex.Message}");
-                
-                
-            ViewData["weather"] = Enumerable.Empty<WeatherForecast>().ToArray();
+                _logger.LogWarning($"The Minimal.WebApi service is not responding.Exception: {ex.Message}");
+
+
+                ViewData["weather"] = Enumerable.Empty<WeatherForecast>().ToArray();
             }
             return View(model); // передача модели представлению
         }
@@ -84,20 +86,20 @@ namespace Northwind.Mvc.Controllers
                 uri = $"api/customers/?country={country}";
             }
             HttpClient client = clientFactory.CreateClient(name: "Northwind.WebApi");
-            HttpRequestMessage request = new( method: HttpMethod.Get, requestUri: uri);
-           
+            HttpRequestMessage request = new(method: HttpMethod.Get, requestUri: uri);
+
             HttpResponseMessage response = await client.SendAsync(request);
             IEnumerable<Customer>? Model = await response.Content.ReadFromJsonAsync<IEnumerable<Customer>>();
-           
+
             return View(Model);
         }
 
 
 
-        public async Task<IActionResult> CreateCustomer(string customer_name,string customer_id)
+        public async Task<IActionResult> CreateCustomer(string customer_name, string customer_id)
         {
             string uri;
-           
+
             if (string.IsNullOrEmpty(customer_id))
             {
                 //return BadRequest("ѕоле customer_id не может быть пустым");
@@ -118,16 +120,139 @@ namespace Northwind.Mvc.Controllers
                     Content = content // ƒобавл€ем контент в запрос (правильный синтаксис)
                 };
 
-                    HttpResponseMessage response = await client.SendAsync(request);
+                HttpResponseMessage response = await client.SendAsync(request);
 
-              
-                    Customer? Model = await response.Content.ReadFromJsonAsync<Customer>();
 
-                    return View(Model);
-               
+                Customer? Model = await response.Content.ReadFromJsonAsync<Customer>();
+
+                return View(Model);
+
             }
         }
 
+        public async Task<IActionResult> ServicesgRPCL()
+        {
+            try
+            {
+                using (GrpcChannel channel =GrpcChannel.ForAddress("https://localhost:5006"))
+                {
+                    Shipr.ShiprClient shipr = new(channel);
+                    ShipperReply reply = await shipr.GetShipperAsync(new ShipperRequest { ShipperId = 3 });
+
+                    ViewData["shipr"] = new Shipper
+                    {
+                        ShipperId = reply.ShipperId,
+                        CompanyName = reply.CompanyName,
+                        Phone = reply.Phone
+                    };
+                    }
+
+                }
+            catch (Exception)
+            {
+                _logger.LogWarning($"Northwind.gRPC service is not responding.");
+            }
+
+
+            try
+            {
+                using (GrpcChannel channel =
+                GrpcChannel.ForAddress("https://localhost:5006"))
+                {
+                    Greeter.GreeterClient greeter = new(channel);
+                    HelloReply reply = await greeter.SayHelloAsync(
+                    new HelloRequest { Name = "Viktor Sergeevich" });
+                    ViewData["greeting"] = "Greeting from gRPC service: " + reply.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"Northwind.gRPC service is not responding.");
+            }
+            return View();
+        }
+        public IActionResult Chat()
+        {
+            return View();
+        }
+        public async Task<IActionResult> ServicesGraphQL()
+        {
+            try
+            {
+
+                {
+                    HttpClient client = clientFactory.CreateClient(
+                    name: "Northwind.GraphQL");
+                    HttpRequestMessage request = new(
+                    method: HttpMethod.Post, requestUri: "graphql");
+                    request.Content = new StringContent(content: @"
+                        {
+                            products (categoryId: 8) {
+                                productId
+                                productName
+                                unitsInStock
+                        }
+                       }", encoding: Encoding.UTF8, mediaType: "application/graphql");
+
+
+                    HttpResponseMessage response = await client.SendAsync(request);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        ViewData["seafoodProducts"] = (await response.Content
+                        .ReadFromJsonAsync<GraphQLProducts>())?.Data?.Products;
+                    }
+                    else
+                    {
+                        ViewData["seafoodProducts"] = Enumerable.Empty<Product>().ToArray();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"Northwind.OData service exception: {ex.Message}");
+            }
+            return View();
+        }
+        public async Task<IActionResult> Services()
+        {
+            try
+            {
+
+
+
+                //string requestUri = $"https://localhost:5004/catalog/products/?$filter=startswith(ProductName, 'Cha')&$select=ProductId,ProductName,UnitPrice";
+
+                string requestUri = $"catalog/products/?$filter=startswith(ProductName, 'Cha')&$select=ProductId,ProductName,UnitPrice";
+
+
+                HttpClient client = clientFactory.CreateClient(name: "Northwind.OData");
+
+                HttpRequestMessage request = new(method: HttpMethod.Get, requestUri);
+
+
+
+
+                HttpResponseMessage response = await client.SendAsync(request);
+                if (response.IsSuccessStatusCode)
+                {
+                    ViewData["productsCha"] = (await response.Content.ReadFromJsonAsync<ODataProducts>())?.Value;
+                }
+                else
+                {
+                    // Ћогируем статус ошибки
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogWarning($"Request failed with status code: {response.StatusCode}. Response: {responseContent}");
+                }
+                ViewData["productsCha"] = (await response.Content.ReadFromJsonAsync<ODataProducts>())?.Value;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"Northwind.OData service exception: {ex.Message}");
+            }
+            return View();
+        }
 
         public async Task<IActionResult> UpdateCustomer(string customer_id,
                                                     string company_name,
@@ -142,7 +267,7 @@ namespace Northwind.Mvc.Controllers
             if (string.IsNullOrEmpty(customer_id) || string.IsNullOrEmpty(company_name))
             {
                 return BadRequest("ѕоле customer_id и company_name не могут быть пустыми");
-          
+
             }
             else
             {
@@ -153,7 +278,7 @@ namespace Northwind.Mvc.Controllers
                 Update_c.ContactTitle = contac_title;
                 Update_c.Phone = phone;
                 Update_c.City = city;
-                Update_c.Country = country;              
+                Update_c.Country = country;
                 ViewData["Title"] = $"Updated company data for \"{company_name}\"";
                 uri = $"api/customers/{customer_id}";
                 HttpClient client = clientFactory.CreateClient(name: "Northwind.WebApi");
@@ -204,16 +329,16 @@ namespace Northwind.Mvc.Controllers
             //Console.WriteLine(responseContent);  // Ћогирование содержимого ответа
             Customer? Model = await response.Content.ReadFromJsonAsync<Customer?>();
             return View(Model);
-            
+
         }
 
         public async Task<IActionResult> CustomersAdd()
         {
-        
+
             ViewData["Title"] = "All Customers Worldwide";
 
             var Model = await db.Customers.ToListAsync();
-           
+
 
 
             return View(Model);
@@ -225,7 +350,7 @@ namespace Northwind.Mvc.Controllers
             if (!id.HasValue)
             {
                 return BadRequest("You must pass a Category ID in the route, for example, / Home / CategoryDetail / 21");
-                
+
             }
             Category? model = db.Categories
             .SingleOrDefault(p => p.CategoryId == id);
@@ -238,7 +363,7 @@ namespace Northwind.Mvc.Controllers
 
         //public IActionResult View()
         //{
-           
+
         //    return View(); // передача модели представлению
         //}
 
@@ -272,7 +397,7 @@ namespace Northwind.Mvc.Controllers
             if (!id.HasValue)
             {
                 return BadRequest("You must pass a product ID in the route, for example, / Home / ProductDetail / 21");
-               
+
             }
             Product? model = await db.Products
             .SingleOrDefaultAsync(p => p.ProductId == id);
@@ -288,11 +413,11 @@ namespace Northwind.Mvc.Controllers
             if (!price.HasValue)
             {
                 return BadRequest("You must pass a product price in the query string, for example, / Home / ProductsThatCostMoreThan ? price = 50");
-                
+
             }
 
             IEnumerable<Product> model = db.Products
-         
+
             .Include(p => p.Category).Include(p => p.Supplier)
                .Where(p => p.UnitPrice > price);
 
@@ -306,12 +431,12 @@ namespace Northwind.Mvc.Controllers
         }
 
 
-            [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 
-    
+
 }
