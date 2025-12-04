@@ -1,4 +1,4 @@
 FROM node:alpine
 WORKDIR /app
 COPY . .
-CMD ["node"."index.mjs"]
+CMD ["node","index.mjs"]
