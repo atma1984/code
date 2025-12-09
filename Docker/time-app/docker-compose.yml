@@ -1,18 +1,25 @@
 services:
-  fronend:
-    build: ./fronend
+  frontend:
+    build: ./frontend
+    restart: always
     ports:    
-      - '3333:3000'
+      - '3000:3000'
   api:
     build: ./api
+    restart: always
     ports:    
       - '5555:5000'
+    depends_on:
+      - mysql
+      
   mysql:
     image: mysql
+    restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=time_db
   adminer: 
+    restart: always
     image: adminer
     ports:    
       - '8888:8800'
