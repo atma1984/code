@@ -1,22 +1,16 @@
 services:
   frontend:
-    build: ./frontend
+    image: atma1984/time-app-frontend-dev
     restart: always
     ports:    
       - '3000:3000' 
-    volumes:
-     - /app/node_modules
-     - ./frontend:/app
   api:
-    build: ./api
+    image: atma1984/time-app-api-dev:latest
     restart: always
     ports:    
       - '5555:5000'
     depends_on:
       - mysql
-    volumes:
-     - /app/node_modules
-     - ./api:/app  
     environment:
        MYSQL_HOST: mysql
        MYSQL_USER: root
@@ -30,11 +24,11 @@ services:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=time_db
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data_pub:/var/lib/mysql
   adminer: 
     restart: always
     image: adminer 
     ports:    
       - '8888:8080'
 volumes:
-  mysql_data: 
+  mysql_data_pub: 
